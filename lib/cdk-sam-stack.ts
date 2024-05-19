@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
@@ -12,5 +13,15 @@ export class CdkSamStack extends cdk.Stack {
       code: cdk.aws_lambda.Code.fromAsset('lambda/hello-world'),
       handler: 'app.handler',
     });
+
+    // Define the API Gateway resource
+    const api = new LambdaRestApi(this, 'HelloWorldApi', {
+      handler: lambda,
+      proxy: false,
+    });
+
+    // Define the '/hello' resource with a GET method
+    const helloResource = api.root.addResource('hello');
+    helloResource.addMethod('GET');
   }
 }
