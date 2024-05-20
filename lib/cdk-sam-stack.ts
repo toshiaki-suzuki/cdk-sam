@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkSamStack extends cdk.Stack {
@@ -23,5 +24,12 @@ export class CdkSamStack extends cdk.Stack {
     // Define the '/hello' resource with a GET method
     const helloResource = api.root.addResource('hello');
     helloResource.addMethod('GET');
+
+    // stepfunctions
+    const stateMachine = new sfn.StateMachine(this, 'StateMachine', {
+      definition: new sfn.Pass(this, 'Hello', {
+        result: sfn.Result.fromObject({ hello: 'world' }),
+      }),
+    });
   }
 }
